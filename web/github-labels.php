@@ -37,12 +37,12 @@ if ($data['issue']['user']['id'] === $data['comment']['user']['id'])
 		$client->authenticate($github_api_token, Github\Client::AUTH_HTTP_TOKEN);
 		if ($action === '!set')
 		{
-			$client->api('issue')->labels()->add('nicofuma', 'phpbb-github-webhooks', $data['issue']['number'], $label);
+			$client->api('issue')->labels()->add($data['repository']['owner']['login'], $data['repository']['name'], $data['issue']['number'], $label);
 			echo "$label set for issue " . $data['issue']['number'];
 		}
 		else if ($action === '!unset')
 		{
-			$client->api('issue')->labels()->remove('nicofuma', 'phpbb-github-webhooks', $data['issue']['number'], $label);
+			$client->api('issue')->labels()->remove($data['repository']['owner']['login'], $data['repository']['name'], $data['issue']['number'], $label);
 			echo "$label removed for issue " . $data['issue']['number'];
 		}
 		else
