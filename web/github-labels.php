@@ -18,7 +18,7 @@ include '../config/github-api.php';
 
 $body = file_get_contents('php://input');
 $signature = 'sha1=' . hash_hmac("sha1", $body, $github_webhooks_secret, false);
-if (!(isset($_SERVER['HTTP_X_HUB_SIGNATURE']) && strtolower($_SERVER['HTTP_X_HUB_SIGNATURE']) === $signature))
+if (!isset($_SERVER['HTTP_X_HUB_SIGNATURE']) || strtolower($_SERVER['HTTP_X_HUB_SIGNATURE']) !== $signature)
 {
 	die('Good bye!');
 }
