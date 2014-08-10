@@ -16,7 +16,7 @@ require_once '../vendor/autoload.php';
 
 include '../config/github-api.php';
 
-function is_label_existent (\Github\Client $client, $repo_owner, $repository, $label)
+function label_exists(\Github\Client $client, $repo_owner, $repository, $label)
 {
 	$labels = $client->api('issues')->labels()->all($repo_owner, $repository);
 	foreach ($labels as $label_data)
@@ -60,7 +60,7 @@ if ($data['issue']['user']['id'] === $data['comment']['user']['id'])
 	{
 		$client = new Github\Client();
 
-		if (is_label_existent($client, $data['repository']['owner']['login'], $data['repository']['name'], $label))
+		if (label_exists($client, $data['repository']['owner']['login'], $data['repository']['name'], $label))
 		{
 			$client->authenticate($github_api_token, Github\Client::AUTH_HTTP_TOKEN);
 			if ($action === '!set')
