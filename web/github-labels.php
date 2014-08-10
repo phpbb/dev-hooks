@@ -16,6 +16,20 @@ require_once '../vendor/autoload.php';
 
 include '../config/github-api.php';
 
+function label_exists(\Github\Client $client, $repo_owner, $repository, $label)
+{
+	$labels = $client->api('issues')->labels()->all($repo_owner, $repository);
+	foreach ($labels as $label_data)
+	{
+		if ($label_data['name'] === $label)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 $equals = function($a, $b) {
 	$sha256 = function($data) {
 		return hash('sha256', $data, true);
@@ -30,7 +44,11 @@ if (!isset($_SERVER['HTTP_X_HUB_SIGNATURE']) || !$equals(strtolower($_SERVER['HT
 	die('Good bye!');
 }
 
-$supported_labels = array('WIP' => 1);
+$protected_labels = array(
+	'3.0 (Olympus)',
+	'3.1 (Ascraeus)',
+	'3.2 (Rhea)',
+);
 
 $data = json_decode($body, true);
 if ($data['issue']['user']['id'] === $data['comment']['user']['id'])
@@ -38,27 +56,35 @@ if ($data['issue']['user']['id'] === $data['comment']['user']['id'])
 	$message_parts = explode(' ', $data['comment']['body']);
 	$action = array_shift($message_parts);
 	$label = implode(' ', $message_parts);
-	if (isset($supported_labels[$label]))
+	if (!in_array($label, $protected_labels))
 	{
 		$client = new Github\Client();
-		$client->authenticate($github_api_token, Github\Client::AUTH_HTTP_TOKEN);
-		if ($action === '!set')
+
+		if (label_exists($client, $data['repository']['owner']['login'], $data['repository']['name'], $label))
 		{
-			$client->api('issue')->labels()->add($data['repository']['owner']['login'], $data['repository']['name'], $data['issue']['number'], $label);
-			echo "$label set for issue " . $data['issue']['number'];
-		}
-		else if ($action === '!unset')
-		{
-			$client->api('issue')->labels()->remove($data['repository']['owner']['login'], $data['repository']['name'], $data['issue']['number'], $label);
-			echo "$label removed for issue " . $data['issue']['number'];
+			$client->authenticate($github_api_token, Github\Client::AUTH_HTTP_TOKEN);
+			if ($action === '!set')
+			{
+				$client->api('issue')->labels()->add($data['repository']['owner']['login'], $data['repository']['name'], $data['issue']['number'], $label);
+				echo "$label set for issue " . $data['issue']['number'];
+			}
+			else if ($action === '!unset')
+			{
+				$client->api('issue')->labels()->remove($data['repository']['owner']['login'], $data['repository']['name'], $data['issue']['number'], $label);
+				echo "$label removed for issue " . $data['issue']['number'];
+			}
+			else
+			{
+				echo 'Unsupported action.';
+			}
 		}
 		else
 		{
-			echo 'Unsupported action.';
+			echo 'Non-existent label.';
 		}
 	}
 	else
 	{
-		echo 'Unsupported label.';
+		echo 'Protected label.';
 	}
 }
