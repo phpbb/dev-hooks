@@ -16,6 +16,20 @@ require_once '../vendor/autoload.php';
 
 include '../config/github-api.php';
 
+function is_label_existent (\Github\Client $client, $repo_owner, $repository, $label)
+{
+	$labels = $client->api('issues')->labels()->all($repo_owner, $repository);
+	foreach ($labels as $label_data)
+	{
+		if ($label_data['name'] === $label)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 $equals = function($a, $b) {
 	$sha256 = function($data) {
 		return hash('sha256', $data, true);
@@ -45,22 +59,28 @@ if ($data['issue']['user']['id'] === $data['comment']['user']['id'])
 	if (!in_array($label, $protected_labels))
 	{
 		$client = new Github\Client();
-		var_dump($client->api('issues')->labels()->all($data['repository']['owner']['login'], $data['repository']['name']));
-		//if ()
-		$client->authenticate($github_api_token, Github\Client::AUTH_HTTP_TOKEN);
-		if ($action === '!set')
+
+		if (is_label_existent($client, $data['repository']['owner']['login'], $data['repository']['name'], $label))
 		{
-			$client->api('issue')->labels()->add($data['repository']['owner']['login'], $data['repository']['name'], $data['issue']['number'], $label);
-			echo "$label set for issue " . $data['issue']['number'];
-		}
-		else if ($action === '!unset')
-		{
-			$client->api('issue')->labels()->remove($data['repository']['owner']['login'], $data['repository']['name'], $data['issue']['number'], $label);
-			echo "$label removed for issue " . $data['issue']['number'];
+			$client->authenticate($github_api_token, Github\Client::AUTH_HTTP_TOKEN);
+			if ($action === '!set')
+			{
+				$client->api('issue')->labels()->add($data['repository']['owner']['login'], $data['repository']['name'], $data['issue']['number'], $label);
+				echo "$label set for issue " . $data['issue']['number'];
+			}
+			else if ($action === '!unset')
+			{
+				$client->api('issue')->labels()->remove($data['repository']['owner']['login'], $data['repository']['name'], $data['issue']['number'], $label);
+				echo "$label removed for issue " . $data['issue']['number'];
+			}
+			else
+			{
+				echo 'Unsupported action.';
+			}
 		}
 		else
 		{
-			echo 'Unsupported action.';
+			echo 'Non-existent label.';
 		}
 	}
 	else
