@@ -19,9 +19,9 @@ include '../config/github-api.php';
 $equals = function($a, $b) {
 	$sha256 = function($data) {
 		return hash('sha256', $data, true);
-	}
+	};
 	return $sha256($a) === $sha256($b);
-}
+};
 
 $body = file_get_contents('php://input');
 $signature = 'sha1=' . hash_hmac("sha1", $body, $github_webhooks_secret, false);
