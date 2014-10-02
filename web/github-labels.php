@@ -48,6 +48,7 @@ $protected_labels = array(
 	'3.0 (Olympus)',
 	'3.1 (Ascraeus)',
 	'3.2 (Rhea)',
+	'Blocker',
 );
 
 $data = json_decode($body, true);
