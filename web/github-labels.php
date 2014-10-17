@@ -54,7 +54,8 @@ $protected_labels = array(
 $data = json_decode($body, true);
 if ($data['issue']['user']['id'] === $data['comment']['user']['id'])
 {
-	$message_parts = explode(' ', $data['comment']['body']);
+	$message_lines = explode("\n", $data['comment']['body']);
+	$message_parts = explode(' ', $message_lines[0]);
 	$action = array_shift($message_parts);
 	$label = implode(' ', $message_parts);
 	if (!in_array($label, $protected_labels))
