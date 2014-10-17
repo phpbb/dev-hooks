@@ -54,38 +54,38 @@ $protected_labels = array(
 $data = json_decode($body, true);
 if ($data['issue']['user']['id'] === $data['comment']['user']['id'])
 {
-	$message_parts = explode(' ', $data['comment']['body']);
-	$action = array_shift($message_parts);
-	$label = implode(' ', $message_parts);
-	if (!in_array($label, $protected_labels))
+	$message_lines = explode("\n", $data['comment']['body']);
+	foreach ($message_lines as $line)
 	{
-		$client = new Github\Client();
-
-		if (label_exists($client, $data['repository']['owner']['login'], $data['repository']['name'], $label))
+		$message_parts = explode(' ', $line);
+		$action = array_shift($message_parts);
+		$label = implode(' ', $message_parts);
+		if (!in_array($label, $protected_labels))
 		{
-			$client->authenticate($github_api_token, Github\Client::AUTH_HTTP_TOKEN);
-			if ($action === '!set')
+			$client = new Github\Client();
+
+			if (label_exists($client, $data['repository']['owner']['login'], $data['repository']['name'], $label))
 			{
-				$client->api('issue')->labels()->add($data['repository']['owner']['login'], $data['repository']['name'], $data['issue']['number'], $label);
-				echo "$label set for issue " . $data['issue']['number'];
-			}
-			else if ($action === '!unset')
-			{
-				$client->api('issue')->labels()->remove($data['repository']['owner']['login'], $data['repository']['name'], $data['issue']['number'], $label);
-				echo "$label removed for issue " . $data['issue']['number'];
-			}
-			else
-			{
-				echo 'Unsupported action.';
+				$client->authenticate($github_api_token, Github\Client::AUTH_HTTP_TOKEN);
+				if ($action === '!set')
+				{
+					$client->api('issue')->labels()->add($data['repository']['owner']['login'], $data['repository']['name'], $data['issue']['number'], $label);
+					echo "$label set for issue " . $data['issue']['number'];
+				}
+				else if ($action === '!unset')
+				{
+					$client->api('issue')->labels()->remove($data['repository']['owner']['login'], $data['repository']['name'], $data['issue']['number'], $label);
+					echo "$label removed for issue " . $data['issue']['number'];
+				}
+				else
+				{
+					echo "Unsupported action $action for label $label.\n";
+				}
 			}
 		}
 		else
 		{
-			echo 'Non-existent label.';
+			echo "Protected label $label.\n";
 		}
-	}
-	else
-	{
-		echo 'Protected label.';
 	}
 }
