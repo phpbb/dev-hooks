@@ -54,7 +54,7 @@ $protected_labels = array(
 $data = json_decode($body, true);
 if ($data['issue']['user']['id'] === $data['comment']['user']['id'])
 {
-	$message_lines = explode("\n", $data['comment']['body']);
+	$message_lines = explode("\n", str_replace("\r\n", "\n", $data['comment']['body']));
 	foreach ($message_lines as $line)
 	{
 		$message_parts = explode(' ', $line);
