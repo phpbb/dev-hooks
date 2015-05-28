@@ -44,7 +44,7 @@ if ($data['action'] == 'opened')
     if (!containsKey($title) && !containsKey($body)) {
 
         $ticketId = 'FOOBAR';
-        $ticketLink = 'https://tracker.phpbb.com/browse/'.$ticketId
+        $ticketLink = 'https://tracker.phpbb.com/browse/'.$ticketId;
 
         $newBody = $body ? $body."\r\n\r\n".$ticketLink : $ticketLink;
         $client = new Github\Client();
