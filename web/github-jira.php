@@ -15,10 +15,34 @@
 require_once '../vendor/autoload.php';
 
 include '../config/github-api.php';
+include '../config/jira-api.php';
 
 function containsJiraKey($message)
 {
     return preg_match('#(PHPBB3|SECURITY)-(\d+)#', $message);
+}
+
+function getApiClient($username, $password)
+{
+    $api = new \chobie\Jira\Api(
+        'https://tracker.phpbb.com/',
+        new \chobie\Jira\Api\Authentication\Basic($username, $password)
+    );
+    return $api;
+}
+
+function createJiraTicket($api, $data)
+{
+    $result = $api->createIssue(
+        'PHPBB3',
+        $data['pull_request']['title'],
+        1, // issue type Bug
+        array(
+            'description' => $data['pull_request']['body'],
+        )
+    )->getResult();
+
+    return $result['key'];
 }
 
 $equals = function($a, $b) {
@@ -43,7 +67,9 @@ if ($data['action'] == 'opened')
 
     if (!containsJiraKey($title) && !containsJiraKey($body)) {
 
-        $ticketId = 'FOOBAR';
+        $jira = getApiClient($jira_username, $jira_password);
+        $ticketId = createJiraTicket($jira, $data);
+
         $ticketLink = 'https://tracker.phpbb.com/browse/'.$ticketId;
 
         $newBody = $body ? $body."\r\n\r\n".$ticketLink : $ticketLink;
