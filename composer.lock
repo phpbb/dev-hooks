@@ -1,23 +1,73 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4da9d3aa8e0067eb8e6aa14efc6ee68a",
+    "hash": "4898865f58422c46edc840560257da3c",
     "packages": [
         {
-            "name": "guzzle/guzzle",
-            "version": "v3.9.1",
+            "name": "chobie/jira-api-restclient",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/guzzle/guzzle3.git",
-                "reference": "92d9934f2fca1da15178c91239576ae26e505e60"
+                "url": "https://github.com/chobie/jira-api-restclient.git",
+                "reference": "661e028fa3e96451202307259c4695d25df1a393"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle3/zipball/92d9934f2fca1da15178c91239576ae26e505e60",
-                "reference": "92d9934f2fca1da15178c91239576ae26e505e60",
+                "url": "https://api.github.com/repos/chobie/jira-api-restclient/zipball/661e028fa3e96451202307259c4695d25df1a393",
+                "reference": "661e028fa3e96451202307259c4695d25df1a393",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.1.*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "chobie\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Shuhei Tanuma",
+                    "email": "chobieeee@php.net",
+                    "homepage": "http://chobie.github.io/"
+                }
+            ],
+            "description": "JIRA REST API.",
+            "keywords": [
+                "api",
+                "jira",
+                "rest"
+            ],
+            "time": "2014-07-27 11:55:20"
+        },
+        {
+            "name": "guzzle/guzzle",
+            "version": "v3.9.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/guzzle/guzzle3.git",
+                "reference": "0645b70d953bc1c067bbc8d5bc53194706b628d9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/guzzle/guzzle3/zipball/0645b70d953bc1c067bbc8d5bc53194706b628d9",
+                "reference": "0645b70d953bc1c067bbc8d5bc53194706b628d9",
                 "shasum": ""
             },
             "require": {
@@ -58,10 +108,13 @@
                 "zendframework/zend-cache": "2.*,<2.3",
                 "zendframework/zend-log": "2.*,<2.3"
             },
+            "suggest": {
+                "guzzlehttp/guzzle": "Guzzle 5 has moved to a new package name. The package you have installed, Guzzle 3, is deprecated."
+            },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.8-dev"
+                    "dev-master": "3.9-dev"
                 }
             },
             "autoload": {
@@ -85,7 +138,7 @@
                     "homepage": "https://github.com/guzzle/guzzle/contributors"
                 }
             ],
-            "description": "Guzzle is a PHP HTTP client library and framework for building RESTful web service clients",
+            "description": "PHP HTTP client. This library is deprecated in favor of https://packagist.org/packages/guzzlehttp/guzzle",
             "homepage": "http://guzzlephp.org/",
             "keywords": [
                 "client",
@@ -96,20 +149,20 @@
                 "rest",
                 "web service"
             ],
-            "time": "2014-05-07 17:04:22"
+            "time": "2015-03-18 18:23:50"
         },
         {
             "name": "knplabs/github-api",
-            "version": "1.2.6",
+            "version": "1.4.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/php-github-api.git",
-                "reference": "6ee8ad85e4d4a82e8ab92ac76fd14671dbba5158"
+                "reference": "346761bf33ec3af686d304e679d4729f36b0a943"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/php-github-api/zipball/6ee8ad85e4d4a82e8ab92ac76fd14671dbba5158",
-                "reference": "6ee8ad85e4d4a82e8ab92ac76fd14671dbba5158",
+                "url": "https://api.github.com/repos/KnpLabs/php-github-api/zipball/346761bf33ec3af686d304e679d4729f36b0a943",
+                "reference": "346761bf33ec3af686d304e679d4729f36b0a943",
                 "shasum": ""
             },
             "require": {
@@ -126,7 +179,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.3.x-dev"
+                    "dev-master": "1.4.x-dev"
                 }
             },
             "autoload": {
@@ -157,21 +210,21 @@
                 "gist",
                 "github"
             ],
-            "time": "2014-07-01 12:09:42"
+            "time": "2015-05-26 06:11:50"
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.5.2",
+            "version": "v2.6.8",
             "target-dir": "Symfony/Component/EventDispatcher",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher.git",
-                "reference": "2215d2ef6fd7ab24d55576a3d924df575c741762"
+                "reference": "672593bc4b0043a0acf91903bb75a1c82d8f2e02"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/2215d2ef6fd7ab24d55576a3d924df575c741762",
-                "reference": "2215d2ef6fd7ab24d55576a3d924df575c741762",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/672593bc4b0043a0acf91903bb75a1c82d8f2e02",
+                "reference": "672593bc4b0043a0acf91903bb75a1c82d8f2e02",
                 "shasum": ""
             },
             "require": {
@@ -179,9 +232,11 @@
             },
             "require-dev": {
                 "psr/log": "~1.0",
-                "symfony/config": "~2.0",
-                "symfony/dependency-injection": "~2.0",
-                "symfony/stopwatch": "~2.2"
+                "symfony/config": "~2.0,>=2.0.5",
+                "symfony/dependency-injection": "~2.6",
+                "symfony/expression-language": "~2.6",
+                "symfony/phpunit-bridge": "~2.7",
+                "symfony/stopwatch": "~2.3"
             },
             "suggest": {
                 "symfony/dependency-injection": "",
@@ -190,7 +245,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.5-dev"
+                    "dev-master": "2.6-dev"
                 }
             },
             "autoload": {
@@ -205,25 +260,26 @@
             "authors": [
                 {
                     "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com",
-                    "homepage": "http://fabien.potencier.org",
-                    "role": "Lead Developer"
+                    "email": "fabien@symfony.com"
                 },
                 {
                     "name": "Symfony Community",
-                    "homepage": "http://symfony.com/contributors"
+                    "homepage": "https://symfony.com/contributors"
                 }
             ],
             "description": "Symfony EventDispatcher Component",
-            "homepage": "http://symfony.com",
-            "time": "2014-07-09 09:05:48"
+            "homepage": "https://symfony.com",
+            "time": "2015-05-02 15:18:45"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "chobie/jira-api-restclient": 20
+    },
     "prefer-stable": false,
+    "prefer-lowest": false,
     "platform": [],
     "platform-dev": []
 }
