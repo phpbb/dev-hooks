@@ -41,7 +41,7 @@ if ($data['action'] == 'opened')
     $title = $data['pull_request']['title'];
     $body = $data['pull_request']['body'];
 
-    if (!containsKey($title) && !containsKey($body)) {
+    if (!containsJiraKey($title) && !containsJiraKey($body)) {
 
         $ticketId = 'FOOBAR';
         $ticketLink = 'https://tracker.phpbb.com/browse/'.$ticketId;
