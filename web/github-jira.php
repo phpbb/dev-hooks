@@ -70,7 +70,11 @@ if ($data['action'] == 'opened')
         $jira = getApiClient($jira_username, $jira_password);
         $ticketId = createJiraTicket($jira, $data);
 
-        $ticketLink = 'https://tracker.phpbb.com/browse/'.$ticketId;
+        if ($ticketId) {
+            $ticketLink = 'https://tracker.phpbb.com/browse/'.$ticketId;
+        } else {
+            $ticketLink = 'Could not automatically create an issue. Please create one on https://tracker.phpbb.com/ and replace this text with a link to it.';
+        }
 
         $newBody = $body ? $body."\r\n\r\n".$ticketLink : $ticketLink;
         $client = new Github\Client();
