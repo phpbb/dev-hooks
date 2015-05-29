@@ -25,7 +25,7 @@ function containsJiraKey($message)
 function getApiClient($username, $password)
 {
     $api = new \chobie\Jira\Api(
-        'https://tracker.phpbb.com/',
+        'https://tracker.phpbb.com',
         new \chobie\Jira\Api\Authentication\Basic($username, $password)
     );
     return $api;
@@ -66,6 +66,7 @@ if ($data['action'] == 'opened')
     $body = $data['pull_request']['body'];
 
     if (!containsJiraKey($title) && !containsJiraKey($body)) {
+        echo "No issue key found, creating ticket\n";
 
         $jira = getApiClient($jira_username, $jira_password);
         $ticketId = createJiraTicket($jira, $data);
