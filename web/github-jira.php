@@ -33,13 +33,17 @@ function getApiClient($username, $password)
 
 function createJiraTicket($api, $data)
 {
+    $options = array();
+
+    if ($data['pull_request']['body']) {
+        $options['description'] = $data['pull_request']['body'];
+    }
+
     $result = $api->createIssue(
         'PHPBB3',
         $data['pull_request']['title'],
         1, // issue type Bug
-        array(
-            'description' => $data['pull_request']['body'],
-        )
+        $options
     )->getResult();
 
     return $result['key'];
