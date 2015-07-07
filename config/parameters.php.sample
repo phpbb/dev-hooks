@@ -1,0 +1,6 @@
+<?php return [
+    'github_api_token' => '',
+    'github_webhooks_secret' => '',
+    'jira_username' => '',
+    'jira_password' => '',
+];
