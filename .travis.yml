@@ -2,7 +2,19 @@ language: php
 
 php:
   - 5.6
+  
+## Run on container environment
+sudo: false
 
+## Cache composer bits
+cache:
+  directories:
+    - vendor
+    - $HOME/.composer/cache
+
+install:
+  - composer install
+  
 script:
   - vendor/bin/phpunit
   - vendor/bin/phpcs --standard=PSR2 --extensions=php -s src/ tests/
