@@ -27,38 +27,58 @@ class PullRequestJiraTicket implements Listener
             $title = $data['pull_request']['title'];
             $body = $data['pull_request']['body'];
 
-            if (!$this->containsJiraKey($title) && !$this->containsJiraKey($body)) {
-                echo "No issue key found, creating ticket\n";
-
-                $ticketId = $this->createJiraTicket($data);
-
-                if ($ticketId) {
-                    $ticketLink = 'https://tracker.phpbb.com/browse/'.$ticketId;
-                } else {
-                    $ticketLink = 'Could not automatically create an issue. ' .
-                        'Please create one on https://tracker.phpbb.com/ and ' .
-                        'replace this text with a link to it.';
-                }
-
-                $newBody = $body ? "$body\n\n$ticketLink" : $ticketLink;
-
-                $this->githubHelper
-                    ->getAuthenticatedClient()
-                    ->api('pull_request')
-                    ->update(
-                        $data['repository']['owner']['login'],
-                        $data['repository']['name'],
-                        $data['pull_request']['number'],
-                        ['title' => $title, 'body' => $newBody]
-                    )
-                ;
+            if ($this->containsJiraKey($title) || $this->containsJiraKey($body)) {
+                return;
             }
+
+            if ($this->containsJiraKey($data['pull_request']['head']['ref'])) {
+                return;
+            }
+
+            $commits = $this->githubHelper
+                ->getAuthenticatedClient()
+                ->api('pull_request')
+                ->commits(
+                    $data['repository']['owner']['login'],
+                    $data['repository']['name'],
+                    $data['pull_request']['number']
+                )
+            ;
+
+            if ($this->containsJiraKey($commits[0]['commit']['message'])) {
+                return;
+            }
+            
+            echo "No issue key found, creating ticket\n";
+
+            $ticketId = $this->createJiraTicket($data);
+
+            if ($ticketId) {
+                $ticketLink = 'https://tracker.phpbb.com/browse/'.$ticketId;
+            } else {
+                $ticketLink = 'Could not automatically create an issue. ' .
+                    'Please create one on https://tracker.phpbb.com/ and ' .
+                    'replace this text with a link to it.';
+            }
+
+            $newBody = $body ? "$body\n\n$ticketLink" : $ticketLink;
+
+            $this->githubHelper
+                ->getAuthenticatedClient()
+                ->api('pull_request')
+                ->update(
+                    $data['repository']['owner']['login'],
+                    $data['repository']['name'],
+                    $data['pull_request']['number'],
+                    ['title' => $title, 'body' => $newBody]
+                )
+            ;
         }
     }
 
     protected function containsJiraKey($message)
     {
-        return preg_match('#(PHPBB3|SECURITY)-(\d+)#', $message);
+        return preg_match('#(PHPBB3|SECURITY)-(\d+)#', $message) || preg_match('#ticket/(\d+)#', $message);
     }
 
     protected function createJiraTicket($data)
