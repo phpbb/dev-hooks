@@ -15,6 +15,7 @@
 require_once '../vendor/autoload.php';
 
 include '../config/github-api.php';
+include '../includes/functions_utils.php';
 
 function label_exists(\Github\Client $client, $repo_owner, $repository, $label)
 {
@@ -30,16 +31,9 @@ function label_exists(\Github\Client $client, $repo_owner, $repository, $label)
 	return false;
 }
 
-$equals = function($a, $b) {
-	$sha256 = function($data) {
-		return hash('sha256', $data, true);
-	};
-	return $sha256($a) === $sha256($b);
-};
-
 $body = file_get_contents('php://input');
 $signature = 'sha1=' . hash_hmac("sha1", $body, $github_webhooks_secret, false);
-if (!isset($_SERVER['HTTP_X_HUB_SIGNATURE']) || !$equals(strtolower($_SERVER['HTTP_X_HUB_SIGNATURE']), $signature))
+if (!isset($_SERVER['HTTP_X_HUB_SIGNATURE']) || !hash_equals($signature, strtolower($_SERVER['HTTP_X_HUB_SIGNATURE'])))
 {
 	die('Good bye!');
 }
