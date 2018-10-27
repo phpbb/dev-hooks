@@ -2,7 +2,7 @@
 
 # Check if file for updating tags exists
 if [ -f "$PWD/../cache/.split_3.0.x" ] && [ ! -f "$PWD/../cache/.split_3.0.x.lock" ]; then
-	target_branch="3.0.x"
+    target_branch="3.0.x"
 elif [ -f "$PWD/../cache/.split_3.1.x" ] && [ ! -f "$PWD/../cache/.split_3.1.x.lock" ]; then
     target_branch="3.1.x"
 elif [ -f "$PWD/../cache/.split_3.2.x" ] && [ ! -f "$PWD/../cache/.split_3.2.x.lock" ]; then
@@ -21,23 +21,23 @@ phpbb_app_exists=true
 phpbb_core_exists=true
 # Check if phpBB repo exists
 if [ ! -d "$PWD/phpbb/.git" ]; then
-	echo "phpBB repo has not been set up in phpbb subfolder."
-	phpbb_repo_exists=false
+    echo "phpBB repo has not been set up in phpbb subfolder."
+    phpbb_repo_exists=false
 fi
 
 # Check if phpBB app repo exists
 if [ ! -d "$PWD/phpbb-app/.git" ]; then
-	echo "phpBB app repo has not been set up in phpbb subfolder."
-	phpbb_app_exists=false
+    echo "phpBB app repo has not been set up in phpbb subfolder."
+    phpbb_app_exists=false
 fi
 # Check if phpBB core repo exists
 if [ ! -d "$PWD/phpbb-core/.git" ]; then
-	echo "phpBB core repo has not been set up in phpbb subfolder."
-	phpbb_core_exists=false
+    echo "phpBB core repo has not been set up in phpbb subfolder."
+    phpbb_core_exists=false
 fi
 
 if [ "$phpbb_repo_exists" = false ] || [ "$phpbb_app_exists" = false ] || [ "$phpbb_core_exists" = false ] ; then
-	exit 1
+    exit 1
 fi
 
 # Create lock file
