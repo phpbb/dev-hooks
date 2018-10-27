@@ -1,2 +1,4 @@
 /vendor
 /config/parameters.php
+/cache/*
+!/cache/.git-keep
