@@ -16,6 +16,7 @@ class IssueCommentGithubLabels implements Listener
         '3.0 (Olympus)',
         '3.1 (Ascraeus)',
         '3.2 (Rhea)',
+        '3.3 (Proteus)',
         'Blocker',
     ];
 
