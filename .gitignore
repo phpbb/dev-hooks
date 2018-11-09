@@ -1,2 +1,7 @@
 /vendor
 /config/parameters.php
+/cache/*
+!/cache/.git-keep
+/scripts/phpbb
+/scripts/phpbb-app
+/scripts/phpbb-core

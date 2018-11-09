@@ -17,6 +17,7 @@ class ContainerBuilder
         $values = [
             // Parameters
             'jira_url' => 'https://tracker.phpbb.com',
+            'cache_dir' => __DIR__ . '/../cache/',
 
             // Services
             'github_client' => function ($c) {
@@ -54,6 +55,16 @@ class ContainerBuilder
                     $c['jira_client']
                 );
             },
+            'listener.push.split_repo' => function ($c) {
+                return new Listener\PushSplitRepo(
+                    $c['cache_dir']
+                );
+            },
+            'listener.create.add_tag' => function ($c) {
+                return new Listener\AddTagSplit(
+                    $c['cache_dir']
+                );
+            }
         ];
 
         $secretsFile = __DIR__.'/../config/parameters.php';
