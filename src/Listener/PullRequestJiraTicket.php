@@ -23,7 +23,7 @@ class PullRequestJiraTicket implements Listener
 
     public function handle(array $data)
     {
-        if ($data['action'] === 'opened') {
+        if ($data['action'] === 'opened' || $data['action'] === 'reopened') {
             $title = $data['pull_request']['title'];
             $body = $data['pull_request']['body'];
 
