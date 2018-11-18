@@ -55,7 +55,7 @@ do
             continue
         fi
         tag_commit=`$PWD/splitsh-lite --prefix=phpBB/ --origin=refs/tags/${tag} --path=phpbb/ --git="<1.8.2"  2> /dev/null`
-        tag_msg=`cd phpbb && git tag -l --format='%(contents)' ${tag} && cd ..`
+        tag_msg=`cd phpbb && git for-each-ref refs/tags/${tag} --format='%(contents)' && cd ..`
         cd phpbb-app
         if git cat-file -e ${tag_commit}^{commit} 2> /dev/null; then
             git tag -a ${tag} ${tag_commit} -m "${tag_msg}"
@@ -69,7 +69,7 @@ do
             continue
         fi
         tag_commit=`$PWD/splitsh-lite --prefix=phpBB/phpbb --origin=refs/tags/${tag} --path=phpbb/ --git="<1.8.2"  2> /dev/null`
-        tag_msg=`cd phpbb && git tag -l --format='%(contents)' ${tag} && cd ..`
+        tag_msg=`cd phpbb && git for-each-ref refs/tags/${tag} --format='%(contents)' && cd ..`
         cd phpbb-core
         if git cat-file -e ${tag_commit}^{commit} 2> /dev/null; then
             git tag -a ${tag} ${tag_commit} -m "${tag_msg}"
