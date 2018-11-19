@@ -89,8 +89,7 @@ class IssueCommentGithubLabels implements Listener
         foreach ($labels as $label_data) {
             if ($label_data['name'] === $label) {
                 return true;
-            }
-            else if (stripos($label_data['name'], $label) === 0) {
+            } elseif (stripos($label_data['name'], $label) === 0) {
                 $label = $label_data['name'];
                 return true;
             }
