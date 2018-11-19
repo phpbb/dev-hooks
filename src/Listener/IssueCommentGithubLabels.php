@@ -17,7 +17,7 @@ class IssueCommentGithubLabels implements Listener
         '3.1 (Ascraeus)',
         '3.2 (Rhea)',
         '3.3 (Proteus)',
-        'Blocker',
+        'Blocker :warning:',
     ];
 
     public function __construct(GithubHelper $githubHelper)
@@ -36,12 +36,12 @@ class IssueCommentGithubLabels implements Listener
                 $messageParts = explode(' ', $line);
                 $action = array_shift($messageParts);
                 $label = implode(' ', $messageParts);
+                $exists = $this->labelExists(
+                    $data['repository']['owner']['login'],
+                    $data['repository']['name'],
+                    $label
+                );
                 if (!in_array($label, $this->protectedLabels)) {
-                    $exists = $this->labelExists(
-                        $data['repository']['owner']['login'],
-                        $data['repository']['name'],
-                        $label
-                    );
                     if ($exists) {
                         if ($action === '!set') {
                             $this->githubHelper
@@ -54,7 +54,7 @@ class IssueCommentGithubLabels implements Listener
                                     $data['issue']['number'],
                                     $label
                                 );
-                            echo "$label set for issue " . $data['issue']['number'];
+                            echo "$label set for issue " . $data['issue']['number'] . "\n";
                         } elseif ($action === '!unset') {
                             $this->githubHelper
                                 ->getAuthenticatedClient()
@@ -66,7 +66,7 @@ class IssueCommentGithubLabels implements Listener
                                     $data['issue']['number'],
                                     $label
                                 );
-                            echo "$label removed for issue " . $data['issue']['number'];
+                            echo "$label removed for issue " . $data['issue']['number'] . "\n";
                         } else {
                             echo "Unsupported action $action for label $label.\n";
                         }
@@ -78,7 +78,7 @@ class IssueCommentGithubLabels implements Listener
         }
     }
 
-    protected function labelExists($repo_owner, $repository, $label)
+    protected function labelExists($repo_owner, $repository, &$label)
     {
         $labels = $this->githubHelper
             ->getClient()
@@ -88,6 +88,10 @@ class IssueCommentGithubLabels implements Listener
         ;
         foreach ($labels as $label_data) {
             if ($label_data['name'] === $label) {
+                return true;
+            }
+            else if (stripos($label_data['name'], $label) === 0) {
+                $label = $label_data['name'];
                 return true;
             }
         }
