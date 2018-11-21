@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7e1dd912817130b7a44aa8789a0a1f8d",
+    "content-hash": "0561e9f8feed0361e32f45ec0e9ef533",
     "packages": [
         {
             "name": "chobie/jira-api-restclient",
@@ -1642,7 +1642,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.6.0,<7.1"
+        "php": ">=5.6.0",
+        "ext-curl": "*"
     },
     "platform-dev": []
 }
