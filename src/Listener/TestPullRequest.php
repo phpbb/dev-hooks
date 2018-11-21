@@ -45,7 +45,8 @@ class TestPullRequest implements Listener
             return;
         }
 
-        $build_url = 'https://bamboo.phpbb.com/rest/api/latest/queue/PHPBB3-PR' . $this->authString . '&bamboo.variable.PRnumber=';
+        $build_url = 'https://bamboo.phpbb.com/rest/api/latest/queue/PHPBB3-PR';
+        $build_url .= $this->authString . '&bamboo.variable.PRnumber=';
 
         $build_url .= $PR;
         $build_url .= '&bamboo.variable.PRref=' . $ref;
@@ -54,10 +55,10 @@ class TestPullRequest implements Listener
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
         curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, NULL);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, null);
         curl_setopt($curl, CURLOPT_URL, $build_url);
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('X-Atlassian-Token: no-check'));
 
@@ -66,9 +67,14 @@ class TestPullRequest implements Listener
 
         curl_close($curl);
 
-        if ($headers['header_size'] == 0 || ($headers['http_code'] != 200 && $headers['http_code'] != 302 && $headers['http_code'] != 500 && !($headers['http_code'] == 400 && strpos($result, 'Build requested but not started') !== FALSE)) || empty($result))
-        {
-            @mail($this->notifyEmail, 'Error contacting Bamboo', 'HTTP Code: ' . $headers['http_code'] . "\n" . 'HTML Result: ' . $result /*. "\n" . 'Payload: ' . $payload_original . "\n" . print_r($GLOBALS, true)*/);
+        if ($headers['header_size'] == 0 || ($headers['http_code'] != 200 && $headers['http_code'] != 302
+            && $headers['http_code'] != 500 && !($headers['http_code'] == 400
+            && strpos($result, 'Build requested but not started') !== false)) || empty($result)) {
+            @mail(
+                $this->notifyEmail,
+                'Error contacting Bamboo',
+                'HTTP Code: ' . $headers['http_code'] . "\n" . 'HTML Result: ' . $result
+            );
             throw new \RuntimeException($result);
         }
     }
@@ -78,10 +84,11 @@ class TestPullRequest implements Listener
         //
         // Log into URL to keep the account active
         //
-        $post_fields = 'login=Login&username=' . urlencode($this->user) . '&password=' . urlencode($this->pass) . '&viewonline=1';
+        $post_fields = 'login=Login&username=' . urlencode($this->user);
+        $post_fields .= '&password=' . urlencode($this->pass) . '&viewonline=1';
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
         curl_setopt($curl, CURLOPT_POST, true);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $post_fields);
@@ -92,9 +99,15 @@ class TestPullRequest implements Listener
 
         curl_close($curl);
 
-        if ($headers['header_size'] == 0 || ($headers['http_code'] != 200 && $headers['http_code'] != 302) || (empty($result) && $headers['http_code'] != 302))
-        {
-            @mail($this->notifyEmail, 'Error logging in.', 'HTTP Code: ' . $headers['http_code'] . "\n" . 'HTML Result: ' . $result . "\n" . print_r($headers, true));
+        if ($headers['header_size'] == 0 || ($headers['http_code'] != 200 && $headers['http_code'] != 302)
+            || (empty($result) && $headers['http_code'] != 302)) {
+            $mailMessage = 'HTTP Code: ' . $headers['http_code'] . "\n";
+            $mailMessage .= 'HTML Result: ' . $result . "\n" . print_r($headers, true);
+            @mail(
+                $this->notifyEmail,
+                'Error logging in.',
+                $mailMessage
+            );
             throw new \RuntimeException($result);
         }
     }
