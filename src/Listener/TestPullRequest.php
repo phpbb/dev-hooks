@@ -28,7 +28,8 @@ class TestPullRequest implements Listener
 
     public function __construct($bambooUser, $bambooPass, $notifyUser, $notifyPass, $notifyEmail, $notifyUrl)
     {
-        $this->authString = '?os_authType=basic&os_username=' . urlencode($bambooUser) . '&os_password=' . $bambooPass;
+        $this->authString = '?os_authType=basic&os_username=' . urlencode($bambooUser);
+        $this->authString .= '&os_password=' . urlencode($bambooPass);
         $this->user = $notifyUser;
         $this->pass = $notifyPass;
         $this->notifyEmail = $notifyEmail;
@@ -38,7 +39,7 @@ class TestPullRequest implements Listener
     public function handle(array $data)
     {
         $action = $data['action'];
-        $PR = (int) $data['number'];
+        $pullRequestNumber = (int) $data['number'];
         $ref = $data['pull_request']['base']['ref'];
 
         if (!in_array($ref, $this->supportedBranches) || !in_array($action, $this->supportedActions)) {
@@ -48,7 +49,7 @@ class TestPullRequest implements Listener
         $build_url = 'https://bamboo.phpbb.com/rest/api/latest/queue/PHPBB3-PR';
         $build_url .= $this->authString . '&bamboo.variable.PRnumber=';
 
-        $build_url .= $PR;
+        $build_url .= $pullRequestNumber;
         $build_url .= '&bamboo.variable.PRref=' . $ref;
 
         $this->loginAccount();
