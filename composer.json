@@ -11,6 +11,7 @@
     },
     "require": {
         "php": ">=5.6.0",
+        "ext-curl": "*",
         "chobie/jira-api-restclient": "2.0.*@dev",
         "knplabs/github-api": "^1.4",
         "pimple/pimple": "^3.0"
