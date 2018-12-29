@@ -39,10 +39,12 @@ mapfile -t phpbb_tags < <(git tag -l "release-*")
 
 # Get phpbb-apps tag list
 cd ../phpbb-app
+git fetch
 mapfile -t phpbb_app_tags < <(git tag -l "release-*")
 
 # Get phpbb-core tag list
 cd ../phpbb-core
+git fetch
 mapfile -t phpbb_core_tags < <(git tag -l "release-*")
 cd ..
 
