@@ -7,6 +7,8 @@ elif [ -f "$PWD/../cache/.split_3.1.x" ] && [ ! -f "$PWD/../cache/.split_3.1.x.l
     target_branch="3.1.x"
 elif [ -f "$PWD/../cache/.split_3.2.x" ] && [ ! -f "$PWD/../cache/.split_3.2.x.lock" ]; then
     target_branch="3.2.x"
+elif [ -f "$PWD/../cache/.split_3.3.x" ] && [ ! -f "$PWD/../cache/.split_3.3.x.lock" ]; then
+    target_branch="3.3.x"
 elif [ -f "$PWD/../cache/.split_master" ] && [ ! -f "$PWD/../cache/.split_master.lock" ]; then
     target_branch="master"
 fi
@@ -47,7 +49,7 @@ touch "$PWD/../cache/.split_${target_branch}.lock"
 $PWD/splitsh-lite --prefix=phpBB/ --origin=origin/${target_branch} --target=phpbb-app/${target_branch} --path=phpbb/ --git="<1.8.2"
 
 # Run splitter for splitting to phpbb-core
-if [ "$target_branch" = "3.1.x" ] || [ "$target_branch" = "3.2.x" ] || [ "$target_branch" = "master" ]; then
+if [ "$target_branch" = "3.1.x" ] || [ "$target_branch" = "3.2.x" ] || [ "$target_branch" = "3.3.x" ] || [ "$target_branch" = "master" ]; then
     $PWD/splitsh-lite --prefix=phpBB/phpbb --origin=origin/${target_branch} --target=phpbb-core/${target_branch} --path=phpbb/ --git="<1.8.2"
 fi
 
@@ -55,7 +57,7 @@ fi
 cd phpbb
 git fetch
 git reset --hard && git checkout ${target_branch} && git reset --hard phpbb-app/${target_branch} && git push phpbb-app ${target_branch}
-if [ "$target_branch" = "3.1.x" ] || [ "$target_branch" = "3.2.x" ] || [ "$target_branch" = "master" ]; then
+if [ "$target_branch" = "3.1.x" ] || [ "$target_branch" = "3.2.x" ] || [ "$target_branch" = "3.3.x" ] || [ "$target_branch" = "master" ]; then
     git checkout ${target_branch} && git reset --hard phpbb-core/${target_branch} && git push phpbb-core ${target_branch}
 fi
 cd ..
