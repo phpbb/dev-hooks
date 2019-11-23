@@ -70,6 +70,11 @@ class ContainerBuilder
                     $c['cache_dir']
                 );
             },
+            'listener.push.add_tag' => function ($c) {
+                return new Listener\AddTagSplit(
+                    $c['cache_dir']
+                );
+            },
             'listener.create.add_tag' => function ($c) {
                 return new Listener\AddTagSplit(
                     $c['cache_dir']
