@@ -18,7 +18,7 @@ class AddTagSplit implements Listener
 
     public function handle(array $data)
     {
-        if ($data['created'] && preg_match('#^refs/tags/release-[3-9]#', $data['ref'])) {
+        if (isset($data['ref_type']) && $data['ref_type'] === 'tag') {
             if (!file_exists($this->cacheDir . '.split_tags')) {
                 $fp = fopen($this->cacheDir . '.split_tags', 'wb');
                 fwrite($fp, sha1($data['ref']));
