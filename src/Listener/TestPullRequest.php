@@ -29,8 +29,8 @@ class TestPullRequest implements Listener
 
     public function __construct($bambooUser, $bambooPass, $notifyUser, $notifyPass, $notifyEmail, $notifyUrl)
     {
-        $this->authString = '?os_authType=basic&os_username=' . urlencode($bambooUser);
-        $this->authString .= '&os_password=' . urlencode($bambooPass);
+        $this->authString = $bambooUser;
+        $this->authString .= ':' . $bambooPass;
         $this->user = $notifyUser;
         $this->pass = $notifyPass;
         $this->notifyEmail = $notifyEmail;
@@ -48,7 +48,7 @@ class TestPullRequest implements Listener
         }
 
         $build_url = 'https://bamboo.phpbb.com/rest/api/latest/queue/PHPBB3-PR';
-        $build_url .= $this->authString . '&bamboo.variable.PRnumber=';
+        $build_url .= '?bamboo.variable.PRnumber=';
 
         $build_url .= $pullRequestNumber;
         $build_url .= '&bamboo.variable.PRref=' . $ref;
@@ -59,6 +59,8 @@ class TestPullRequest implements Listener
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        curl_setopt($curl, CURLOPT_USERPWD, $this->authString);
         curl_setopt($curl, CURLOPT_POST, true);
         curl_setopt($curl, CURLOPT_POSTFIELDS, null);
         curl_setopt($curl, CURLOPT_URL, $build_url);
