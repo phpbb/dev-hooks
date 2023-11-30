@@ -63,6 +63,7 @@ class GithubLabelsTest extends TestCase
             ['!unset Event', [], ['Event']],
             ['!unset GSOC 🎓', [], ['GSOC 🎓']],
             ['!unset GSOC', [], ['GSOC 🎓']],
+            ['!unset LOL', [], []], // Label does not exist
         ];
     }
 

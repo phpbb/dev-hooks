@@ -45,4 +45,83 @@ class KernelTest extends TestCase
 
         $this->kernel->handle($body, $server);
     }
+
+    public function testMissingEventHeader()
+    {
+        $payload = [];
+        $body = json_encode($payload);
+        $server = [
+            'HTTP_X_HUB_SIGNATURE' => 'sha1='.hash_hmac('sha1', $body, $this->hmacKey),
+        ];
+        $listenerStub = $this->createMock('Phpbb\DevHooks\Listener\Listener');
+        $listenerStub
+            ->expects($this->never())
+            ->method('handle')
+        ;
+
+        $this->container['listener.test_event.test'] = $listenerStub;
+
+        $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('Missing X-Github-Event header.');
+        $this->kernel->handle($body, $server);
+    }
+
+    public function testMissingSignature()
+    {
+        $body = '';
+        $server = [
+            'HTTP_X_GITHUB_EVENT' => 'test_event',
+        ];
+        $listenerStub = $this->createMock('Phpbb\DevHooks\Listener\Listener');
+        $listenerStub
+            ->expects($this->never())
+            ->method('handle')
+        ;
+
+        $this->container['listener.test_event.test'] = $listenerStub;
+
+        $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('Missing X-Hub-Signature header');
+        $this->kernel->handle($body, $server);
+    }
+
+    public function testInvalidSignature()
+    {
+        $body = '';
+        $server = [
+            'HTTP_X_HUB_SIGNATURE' => 'sha1=invalid',
+            'HTTP_X_GITHUB_EVENT' => 'test_event',
+        ];
+        $listenerStub = $this->createMock('Phpbb\DevHooks\Listener\Listener');
+        $listenerStub
+            ->expects($this->never())
+            ->method('handle')
+        ;
+
+        $this->container['listener.test_event.test'] = $listenerStub;
+
+        $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('Incorrect X-Hub-Signature header');
+        $this->kernel->handle($body, $server);
+    }
+
+    public function testEmptyPayload()
+    {
+        $body = '';
+        $server = [
+            'HTTP_X_HUB_SIGNATURE' => 'sha1='.hash_hmac('sha1', $body, $this->hmacKey),
+            'HTTP_X_GITHUB_EVENT' => 'test_event',
+        ];
+        $listenerStub = $this->createMock('Phpbb\DevHooks\Listener\Listener');
+        $listenerStub
+            ->expects($this->never())
+            ->method('handle')
+        ;
+
+        $this->container['listener.test_event.test'] = $listenerStub;
+
+        $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('Expected payload to be array.');
+        $this->kernel->handle($body, $server);
+    }
 }
