@@ -7,19 +7,24 @@
 
 namespace Phpbb\DevHooks;
 
+use Github\Api\AbstractApi;
+use Github\Api\Issue;
+
 class GithubClientMock extends \Github\Client
 {
     public $labels;
 
-    public function __construct(\Github\HttpClient\HttpClientInterface $httpClient = null)
+    public AbstractApi $apiMock;
+
+    public function __construct()
     {
-        parent::__construct($httpClient);
+        parent::__construct();
         $this->labels = new LabelsMock();
     }
 
-    public function api($name)
+    public function api($name): AbstractApi
     {
-        return $this;
+        return $this->apiMock;
     }
 
     public function labels()
