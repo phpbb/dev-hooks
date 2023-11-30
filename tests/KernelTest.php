@@ -15,7 +15,7 @@ class KernelTest extends TestCase
     protected $kernel;
     protected $hmacKey = '0123456789';
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->container = new Container([
             'github_webhooks_secret' => $this->hmacKey,
@@ -34,7 +34,7 @@ class KernelTest extends TestCase
             'HTTP_X_HUB_SIGNATURE' => 'sha1='.hash_hmac('sha1', $body, $this->hmacKey),
             'HTTP_X_GITHUB_EVENT' => 'test_event',
         ];
-        $listenerStub = $this->getMock('\Phpbb\DevHooks\Listener\Listener');
+        $listenerStub = $this->createMock('Phpbb\DevHooks\Listener\Listener');
         $listenerStub
             ->expects($this->once())
             ->method('handle')

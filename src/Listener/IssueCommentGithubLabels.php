@@ -11,7 +11,6 @@ use Phpbb\DevHooks\Helper\GithubHelper;
 
 class IssueCommentGithubLabels implements Listener
 {
-    protected $githubHelper;
     protected $protectedLabels = [
         '3.0 (Olympus)',
         '3.1 (Ascraeus)',
@@ -20,9 +19,8 @@ class IssueCommentGithubLabels implements Listener
         'Blocker :warning:',
     ];
 
-    public function __construct(GithubHelper $githubHelper)
+    public function __construct(protected GithubHelper $githubHelper)
     {
-        $this->githubHelper = $githubHelper;
     }
 
     public function handle(array $data)

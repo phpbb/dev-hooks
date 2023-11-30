@@ -14,16 +14,24 @@ class GithubLabelsTest extends TestCase
     /** @var IssueCommentGithubLabels */
     protected $githubLabels;
 
-    /** @var \GithubClientMock */
+    /** @var GithubClientMock */
     protected $mockClient;
 
-    public function setUp()
+    public function setUp(): void
     {
         $githubHelperMock = $this->getMockBuilder('Phpbb\DevHooks\Helper\GithubHelper')
             ->disableOriginalConstructor()
             ->getMock();
 
         $this->mockClient = new GithubClientMock();
+
+        $apiMock = $this->getMockBuilder('Github\Api\AbstractApi')
+            ->disableOriginalConstructor()
+            ->addMethods(['labels'])
+            ->getMock();
+        $apiMock->method('labels')
+            ->willReturn($this->mockClient->labels());
+        $this->mockClient->apiMock = $apiMock;
 
         $githubHelperMock->method('getClient')
             ->willReturn($this->mockClient);
@@ -32,7 +40,7 @@ class GithubLabelsTest extends TestCase
         $this->githubLabels = new IssueCommentGithubLabels($githubHelperMock);
     }
 
-    public function dataHandleEmpty()
+    public function dataHandleEmpty(): array
     {
         return [
             ['!set 3.0 (Olympus)', [], []], // Protected label
