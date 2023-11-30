@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - update/symfony_6.4
   pull_request:
     branches:
       - master
