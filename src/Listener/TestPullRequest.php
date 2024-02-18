@@ -10,9 +10,13 @@ namespace Phpbb\DevHooks\Listener;
 class TestPullRequest implements Listener
 {
     protected $supportedBranches = [
-        '3.2.x',
         '3.3.x',
         'master'
+    ];
+
+    protected $branchUrls = [
+        '3.3.x' => 'https://bamboo.phpbb.com/rest/api/latest/queue/PHPBB3-PR',
+        'master' => 'https://bamboo.phpbb.com/rest/api/latest/queue/PHPBB3-PR1',
     ];
 
     protected $supportedActions = [
@@ -47,7 +51,7 @@ class TestPullRequest implements Listener
             return;
         }
 
-        $build_url = 'https://bamboo.phpbb.com/rest/api/latest/queue/PHPBB3-PR';
+        $build_url = $this->branchUrls[$ref];
         $build_url .= '?bamboo.variable.PRnumber=';
 
         $build_url .= $pullRequestNumber;
