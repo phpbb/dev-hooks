@@ -7,31 +7,32 @@
 
 namespace Phpbb\DevHooks\Helper;
 
+use Github\AuthMethod;
 use Github\Client;
 
 class GithubHelper
 {
-    protected $client;
-    protected $apiToken;
-    protected $authed = false;
+    protected Client $client;
+    protected string $apiToken;
+    protected bool $authed = false;
 
-    public function __construct(Client $client, $apiToken)
+    public function __construct(Client $client, string $apiToken)
     {
         $this->client = $client;
-        $this->apiToken = (string) $apiToken;
+        $this->apiToken = $apiToken;
     }
 
-    public function getClient()
+    public function getClient(): Client
     {
         return $this->client;
     }
 
-    public function getAuthenticatedClient()
+    public function getAuthenticatedClient(): Client
     {
         if (!$this->authed) {
             $this->client->authenticate(
                 $this->apiToken,
-                Client::AUTH_HTTP_TOKEN
+                AuthMethod::ACCESS_TOKEN
             );
         }
         return $this->client;
