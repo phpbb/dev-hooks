@@ -7,6 +7,11 @@
 
 require __DIR__.'/../vendor/autoload.php';
 
-(new Phpbb\DevHooks\ContainerBuilder)
-    ->build()['kernel']
-    ->handle(file_get_contents('php://input'), $_SERVER);
+try {
+    (new Phpbb\DevHooks\ContainerBuilder)
+        ->build()['kernel']
+        ->handle(file_get_contents('php://input'), $_SERVER);
+} catch (\UnexpectedValueException $e) {
+    http_response_code(403);
+    echo $e->getMessage();
+}
