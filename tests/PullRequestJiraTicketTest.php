@@ -35,25 +35,37 @@ class PullRequestJiraTicketTest extends TestCase
     /** @var array Expected updated PR data */
     protected $expectedUpdatedPrData = [];
 
-    protected function setUp()
+    protected function setUp(): void
     {
+        $abstractApiMock = $this->getMockBuilder(\Github\Api\AbstractApi::class)
+            ->disableOriginalConstructor()
+            ->addMethods(['commits', 'update'])
+            ->getMockForAbstractClass();
+        $abstractApiMock->method('commits')
+            ->willReturnCallback([$this, 'getCommitData']);
+        $abstractApiMock->method('update')
+            ->willReturnCallback([$this, 'updatePr']);
+
+        $githubClientMock = $this->getMockBuilder(\Github\Client::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['api'])
+            ->getMock();
+
+        $githubClientMock->method('api')->willReturn($abstractApiMock);
+
         $githubHelperMock = $this->getMockBuilder(GithubHelper::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getAuthenticatedClient', 'api', 'commits', 'update'])
+            ->onlyMethods(['getAuthenticatedClient'])
+            ->addMethods(['update'])
             ->getMock();
 
         $githubHelperMock->method('getAuthenticatedClient')
-            ->willReturnSelf();
-        $githubHelperMock->method('api')
-            ->willReturnSelf();
-        $githubHelperMock->method('commits')
-            ->willReturnCallback([$this, 'getCommitData']);
-        $githubHelperMock->method('update')
-            ->willReturnCallback([$this, 'updatePr']);
+            ->willReturn($githubClientMock);
 
         $this->jiraClientMock = $this->getMockBuilder(JiraClient::class)
             ->disableOriginalConstructor()
-            ->setMethods(['createIssue', 'getResult'])
+            ->onlyMethods(['createIssue'])
+            ->addMethods(['getResult'])
             ->getMock();
         $this->jiraClientMock->method('createIssue')->willReturnCallback([$this, 'createIssue']);
         $this->jiraClientMock->method('getResult')->willReturnCallback(function() { return $this->ticketReturn; });
