@@ -12,6 +12,9 @@ use Phpbb\DevHooks\Helper\GithubHelper;
 
 class PullRequestJiraTicket implements Listener
 {
+    /** @var int Issue type bug */
+    protected const ISSUE_TYPE_BUG = 1;
+
     protected $githubHelper;
     protected $jiraClient;
 
@@ -48,7 +51,7 @@ class PullRequestJiraTicket implements Listener
             if ($this->containsJiraKey($commits[0]['commit']['message'])) {
                 return;
             }
-            
+
             echo "No issue key found, creating ticket\n";
 
             $ticketId = $this->createJiraTicket($data);
@@ -78,7 +81,7 @@ class PullRequestJiraTicket implements Listener
 
     protected function containsJiraKey($message)
     {
-        return preg_match('#(PHPBB3|SECURITY)-(\d+)#', $message) || preg_match('#ticket/(\d+)#', $message);
+        return preg_match('#(PHPBB3?|SECURITY)-(\d+)#', $message) || preg_match('#ticket/(\d+)#', $message);
     }
 
     protected function createJiraTicket($data)
@@ -90,9 +93,9 @@ class PullRequestJiraTicket implements Listener
         }
 
         $result = $this->jiraClient->createIssue(
-            'PHPBB3',
+            'PHPBB',
             $data['pull_request']['title'],
-            1, // issue type Bug
+            self::ISSUE_TYPE_BUG,
             $options
         )->getResult();
 
