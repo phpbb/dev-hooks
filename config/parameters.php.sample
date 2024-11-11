@@ -3,10 +3,4 @@
     'github_webhooks_secret' => '',
     'jira_username' => '',
     'jira_password' => '',
-    'bamboo_username' => '',
-    'bamboo_password' => '',
-    'notify_username' => '',
-    'notify_password' => '',
-    'notify_email' => '',
-    'notify_url' => '',
 ];

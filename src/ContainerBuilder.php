@@ -55,16 +55,6 @@ class ContainerBuilder
                     $c['jira_client']
                 );
             },
-            'listener.pull_request.test' => function ($c) {
-                return new Listener\TestPullRequest(
-                    $c['bamboo_username'],
-                    $c['bamboo_password'],
-                    $c['notify_username'],
-                    $c['notify_password'],
-                    $c['notify_email'],
-                    $c['notify_url']
-                );
-            },
             'listener.push.split_repo' => function ($c) {
                 return new Listener\PushSplitRepo(
                     $c['cache_dir']
